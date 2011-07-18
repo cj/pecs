@@ -486,6 +486,11 @@ class HtmlFormatter extends Formatter
   }
 
    function after() {
+      echo "
+        <style>
+          ul { margin:0; }
+        </style>
+      ";
       $passed = $failed = 0;
       foreach (runner()->specs as $spec) {
           if ($spec->failed()) {
