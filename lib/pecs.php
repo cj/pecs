@@ -83,7 +83,7 @@ class Runner {
             foreach ($suite->specs as $spec) {
                 $this->spec = $spec;
                 $this->formatter->beforeSpec($spec);
-                $scope = $spec->runHooks('before_each');
+                $scope = $spec->runHooks('before_each', $this);
                 $spec->run($scope);
                 $spec->runHooks('after_each', $scope);
                 $this->formatter->afterSpec($spec);
@@ -96,6 +96,7 @@ class Runner {
     function runHooks($hook, $scope=array()) {
         if (isset($this->hooks[$hook])) {
             foreach ($this->hooks[$hook] as $func) {
+                $root= $this;
                 $newScope = $func($scope);
                 if (!is_null($newScope))
                     $scope = $newScope;
