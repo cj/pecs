@@ -57,7 +57,7 @@ class Runner {
         $suite = new Suite($description, $func, $this->suite);
         $this->suites[] = $suite;
         $this->suite = $suite;
-        $func();
+        $func($this);
         $this->suite = $suite->parent;
         return $suite;
     }
@@ -148,7 +148,7 @@ class Suite {
             $scope = $this->parent->runHooks($hook, $scope);
         if (isset($this->hooks[$hook])) {
             foreach ($this->hooks[$hook] as $func) {
-                $newScope = $func($scope, $this);
+                $newScope = $func($scope);
                 if (!is_null($newScope))
                     $scope = $newScope;
             }
@@ -188,7 +188,8 @@ class Spec extends Suite {
     function run($scope=array()) {
         $func = $this->func;
         try {
-            $func($scope, $this);
+            $root= $this;
+            $func($scope, $root);
         }
         catch (\Exception $e) {
             $this->fail($e);
